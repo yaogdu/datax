@@ -1,0 +1,132 @@
+{
+  "job": {
+    "content": [
+      {
+        "reader": {
+          "name": "mysqlreader",
+          "parameter": {
+            "username": "root",
+            "password": "duolabao",
+            "connection": [
+              {
+                "querySql": [
+                  "select  id,version,order_num,source_num,owner_num,pay_num,num,account_num,amount,banlance,can_settle,has_settle,business_type, change_type,settle_batch_num,owner_type,remark,deleted,deleted_time,gmt_create,gmt_modify,remit_bank_num from account_change where gmt_create>='2016-11-01 00:00:00' and gmt_create<'2016-11-02 00:00:00' "
+                ],
+                "jdbcUrl": [
+                  "jdbc:mysql://172.19.24.240:3307/account_center"
+                ]
+              }
+            ]
+          }
+        },
+        "writer": {
+          "name": "eswriter",
+          "parameter": {
+            "clusterName": "duolabao-es",
+            "esIndex": "account_center",
+            "esType": "account_change",
+            "batchSize": "10000",
+            "host": "172.19.24.222",
+            "port": "9300",
+            "column": [
+              {
+                "name": "id",
+                "type": "long"
+              },
+              {
+                "name": "version",
+                "type": "long"
+              },
+              {
+                "name": "order_num",
+                "type": "string"
+              },
+              {
+                "name": "source_num",
+                "type": "string"
+              },
+              {
+                "name": "owner_num",
+                "type": "string"
+              },
+              {
+                "name": "pay_num",
+                "type": "string"
+              },
+              {
+                "name": "num",
+                "type": "string"
+              },
+              {
+                "name": "account_num",
+                "type": "string"
+              },
+              {
+                "name": "amount",
+                "type": "decimal"
+              },
+              {
+                "name": "banlance",
+                "type": "decimal"
+              },
+              {
+                "name": "can_settle",
+                "type": "int"
+              },
+              {
+                "name": "has_settle",
+                "type": "int"
+              },
+              {
+                "name": "business_type",
+                "type": "string"
+              },
+              {
+                "name": "change_type",
+                "type": "string"
+              },
+              {
+                "name": "settle_batch_num",
+                "type": "string"
+              },
+              {
+                "name": "owner_type",
+                "type": "string"
+              },
+              {
+                "name": "remark",
+                "type": "string"
+              },
+              {
+                "name": "deleted",
+                "type": "int"
+              },
+              {
+                "name": "deleted_time",
+                "type": "date"
+              },
+              {
+                "name": "gmt_create",
+                "type": "date"
+              },
+              {
+                "name": "gmt_modify",
+                "type": "date"
+              },
+
+              {
+                "name": "remit_bank_num",
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "setting": {
+      "speed": {
+        "channel": 6
+      }
+    }
+  }
+}

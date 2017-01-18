@@ -1,0 +1,135 @@
+{
+  "job": {
+    "content": [
+      {
+        "reader": {
+          "name": "mysqlreader",
+          "parameter": {
+            "username": "root",
+            "password": "duolabao",
+            "connection": [
+              {
+                "querySql": [
+                  "select  id,version,pay_way,customer_num,shop_num,num,request_num,member_num,source,bussiness_type,type,status,complete_time,amount,refund_time,machine_num,receipt_time,receipt_count,receipt_status,deleted,deleted_time,gmt_create,gmt_modify from order_info where gmt_create>='2016-11-01 00:00:00' and gmt_create<'2016-11-02 00:00:00'"
+                ],
+                "jdbcUrl": [
+                  "jdbc:mysql://172.19.24.240:3307/order_center"
+                ]
+              }
+            ]
+          }
+        },
+        "writer": {
+          "name": "eswriter",
+          "parameter": {
+            "clusterName": "duolabao-es",
+            "esIndex": "order_center",
+            "esType": "order_info",
+            "batchSize": "10000",
+            "host": "172.19.24.222",
+            "port": "9300",
+            "column": [
+              {
+                "name": "id",
+                "type": "long"
+              },
+              {
+                "name": "version",
+                "type": "long"
+              },
+              {
+                "name": "pay_way",
+                "type": "string"
+              },
+              {
+                "name": "customer_num",
+                "type": "string"
+              },
+              {
+                "name": "shop_num",
+                "type": "string"
+              },
+              {
+                "name": "num",
+                "type": "string"
+              },
+              {
+                "name": "request_num",
+                "type": "string"
+              },
+              {
+                "name": "member_num",
+                "type": "string"
+              },
+              {
+                "name": "source",
+                "type": "string"
+              },
+              {
+                "name": "bussiness_type",
+                "type": "string"
+              },
+              {
+                "name": "type",
+                "type": "string"
+              },
+              {
+                "name": "status",
+                "type": "string"
+              },
+              {
+                "name": "complete_time",
+                "type": "date"
+              },
+              {
+                "name": "amount",
+                "type": "decimal"
+              },
+              {
+                "name": "refund_time",
+                "type": "date"
+              },
+              {
+                "name": "machine_num",
+                "type": "string"
+              },
+              {
+                "name": "receipt_time",
+                "type": "date"
+              },
+              {
+                "name": "receipt_count",
+                "type": "int"
+              },
+              {
+                "name": "receipt_status",
+                "type": "int"
+              },
+              {
+                "name": "deleted",
+                "type": "int"
+              },
+              {
+                "name": "deleted_time",
+                "type": "date"
+              },
+              {
+                "name": "gmt_create",
+                "type": "date"
+              },
+              {
+                "name": "gmt_modify",
+                "type": "date"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "setting": {
+      "speed": {
+        "channel": 6
+      }
+    }
+  }
+}

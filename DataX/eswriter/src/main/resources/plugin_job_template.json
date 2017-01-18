@@ -1,0 +1,12 @@
+{
+  "name": "eswriter",
+  "parameter": {
+    "clusterName": "",
+    "esIndex": "",
+    "esType": "",
+    "batchSize": "",
+    "host": "",
+    "port":"",
+    "column": []
+  }
+}
