@@ -7,7 +7,8 @@ import com.alibaba.datax.common.spi.Writer;
 import com.alibaba.datax.common.util.Configuration;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import org.elasticsearch.action.index.IndexResponse;
+import org.elasticsearch.action.bulk.BulkRequestBuilder;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
@@ -84,8 +85,10 @@ public class EsWriter extends Writer {
 
         String clusterName = "";
 
-
         private JSONArray columnMeta = null;
+
+        BulkRequestBuilder bulkRequest;
+
 
         @Override
         public void prepare() {
@@ -147,19 +150,19 @@ public class EsWriter extends Writer {
                 if (("").equals(esIndex) || ("").equals(esType)) {
                     throw new Exception("es index and es type can not be empty");
                 }
-
+                bulkRequest = client.prepareBulk();
 
                 List<Record> writerBuffer = new ArrayList<Record>(BATCH_SIZE);
                 Record record = null;
                 while ((record = lineReceiver.getFromReader()) != null) {
                     writerBuffer.add(record);
                     if (writerBuffer.size() >= BATCH_SIZE) {
-                        batchInsert(writerBuffer, columnMeta);
+                        batchInsert(bulkRequest, writerBuffer, columnMeta);
                         writerBuffer.clear();
                     }
                 }
                 if (!writerBuffer.isEmpty()) {
-                    batchInsert(writerBuffer, columnMeta);
+                    batchInsert(bulkRequest, writerBuffer, columnMeta);
                     writerBuffer.clear();
                 }
 
@@ -168,7 +171,7 @@ public class EsWriter extends Writer {
             }
         }
 
-        private void batchInsert(List<Record> writerBuffer, JSONArray columnMeta) {
+        private void batchInsert(BulkRequestBuilder bulkRequest, List<Record> writerBuffer, JSONArray columnMeta) {
 
             try {
                 for (Record record : writerBuffer) {
@@ -208,19 +211,18 @@ public class EsWriter extends Writer {
 
                     }
 
-                    IndexResponse response = client.prepareIndex(esIndex, esType, document.get("num").toString()).setSource(document).get();
+                    bulkRequest.add(client.prepareIndex(esIndex, esType, document.get("num").toString()).setSource(document));
 
                 }
 
-//                logger.info("bulkRequest.numofactions {}", bulkRequest.numberOfActions());
-//                BulkResponse bulkResponse = bulkRequest.get();
+                BulkResponse bulkResponse = bulkRequest.get();
 //
-//                logger.info("bulkresponse.length is {}", bulkResponse.getItems().length);
-//
-//                if (bulkResponse.hasFailures()) {
-//                    logger.info(bulkResponse.buildFailureMessage());
-//                    throw new Exception("batchInsert error");
-//                }
+                logger.info("bulkresponse.length is {}", bulkResponse.getItems().length);
+
+                if (bulkResponse.hasFailures()) {
+                    logger.info(bulkResponse.buildFailureMessage());
+                    throw new Exception("batchInsert error");
+                }
             } catch (Exception e) {
                 logger.error("batch insert error", e);
             }

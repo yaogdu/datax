@@ -10,7 +10,7 @@
             "connection": [
               {
                 "querySql": [
-                  "select  id,version,order_num,source_num,owner_num,pay_num,num,account_num,amount,banlance,can_settle,has_settle,business_type, change_type,settle_batch_num,owner_type,remark,deleted,deleted_time,gmt_create,gmt_modify,remit_bank_num from account_change where gmt_create>='2016-11-01 00:00:00' and gmt_create<'2016-11-02 00:00:00' "
+                  "select  id,version,order_num,source_num,owner_num,pay_num,num,account_num,amount,banlance,can_settle,has_settle,business_type, change_type,settle_batch_num,owner_type,remark,deleted,deleted_time,gmt_create,gmt_modify,remit_bank_num from account_change where gmt_create>='$fromDate' and gmt_create<'$toDate' limit 100000 "
                 ],
                 "jdbcUrl": [
                   "jdbc:mysql://172.19.24.240:3307/account_center"
