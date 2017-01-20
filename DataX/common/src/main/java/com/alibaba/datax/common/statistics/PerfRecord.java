@@ -15,6 +15,7 @@ public class PerfRecord implements Comparable<PerfRecord> {
     private static Logger perf = LoggerFactory.getLogger(PerfRecord.class);
     private static String datetimeFormat = "yyyy-MM-dd HH:mm:ss";
 
+    private static final Logger logger = LoggerFactory.getLogger(PerfRecord.class);
 
     public enum PHASE {
         /**
@@ -60,12 +61,12 @@ public class PerfRecord implements Comparable<PerfRecord> {
             this.val = val;
         }
 
-        public int toInt(){
+        public int toInt() {
             return val;
         }
     }
 
-    public enum ACTION{
+    public enum ACTION {
         start,
         end
     }
@@ -88,8 +89,8 @@ public class PerfRecord implements Comparable<PerfRecord> {
         this.phase = phase;
     }
 
-    public static void addPerfRecord(int taskGroupId, int taskId, PHASE phase, long startTime,long elapsedTimeInNs) {
-        if(PerfTrace.getInstance().isEnable()) {
+    public static void addPerfRecord(int taskGroupId, int taskId, PHASE phase, long startTime, long elapsedTimeInNs) {
+        if (PerfTrace.getInstance().isEnable()) {
             PerfRecord perfRecord = new PerfRecord(taskGroupId, taskId, phase);
             perfRecord.elapsedTimeInNs = elapsedTimeInNs;
             perfRecord.action = ACTION.end;
@@ -101,13 +102,14 @@ public class PerfRecord implements Comparable<PerfRecord> {
     }
 
     public void start() {
-        if(PerfTrace.getInstance().isEnable()) {
+        logger.info("perfrecord is enabled? {}", PerfTrace.getInstance().isEnable());
+        if (PerfTrace.getInstance().isEnable()) {
             this.startTime = new Date();
             this.startTimeInNs = System.nanoTime();
             this.action = ACTION.start;
             //在PerfTrace里注册
             PerfTrace.getInstance().tracePerfRecord(this);
-            perf.info(toString());
+            perf.info("perfrecord.start,{}",toString());
         }
     }
 
@@ -120,7 +122,7 @@ public class PerfRecord implements Comparable<PerfRecord> {
     }
 
     public void end() {
-        if(PerfTrace.getInstance().isEnable()) {
+        if (PerfTrace.getInstance().isEnable()) {
             this.elapsedTimeInNs = System.nanoTime() - startTimeInNs;
             this.action = ACTION.end;
             PerfTrace.getInstance().tracePerfRecord(this);
@@ -129,7 +131,7 @@ public class PerfRecord implements Comparable<PerfRecord> {
     }
 
     public void end(long elapsedTimeInNs) {
-        if(PerfTrace.getInstance().isEnable()) {
+        if (PerfTrace.getInstance().isEnable()) {
             this.elapsedTimeInNs = elapsedTimeInNs;
             this.action = ACTION.end;
             PerfTrace.getInstance().tracePerfRecord(this);
@@ -140,7 +142,7 @@ public class PerfRecord implements Comparable<PerfRecord> {
     public String toString() {
         return String.format("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s"
                 , getInstId(), taskGroupId, taskId, phase, action,
-                DateFormatUtils.format(startTime, datetimeFormat), elapsedTimeInNs, count, size,getHostIP());
+                DateFormatUtils.format(startTime, datetimeFormat), elapsedTimeInNs, count, size, getHostIP());
     }
 
 
@@ -166,11 +168,11 @@ public class PerfRecord implements Comparable<PerfRecord> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if(!(o instanceof PerfRecord)){
+        if (!(o instanceof PerfRecord)) {
             return false;
         }
 
-        PerfRecord dst = (PerfRecord)o;
+        PerfRecord dst = (PerfRecord) o;
 
         if (this.getInstId() != dst.getInstId()) return false;
         if (this.taskGroupId != dst.taskGroupId) return false;
@@ -189,6 +191,7 @@ public class PerfRecord implements Comparable<PerfRecord> {
         copy.size = this.size;
         return copy;
     }
+
     public int getTaskGroupId() {
         return taskGroupId;
     }
@@ -217,15 +220,15 @@ public class PerfRecord implements Comparable<PerfRecord> {
         return size;
     }
 
-    public long getInstId(){
+    public long getInstId() {
         return PerfTrace.getInstance().getInstId();
     }
 
-    public String getHostIP(){
-       return HostUtils.IP;
+    public String getHostIP() {
+        return HostUtils.IP;
     }
 
-    public String getHostName(){
+    public String getHostName() {
         return HostUtils.HOSTNAME;
     }
 
@@ -241,8 +244,8 @@ public class PerfRecord implements Comparable<PerfRecord> {
         return startTimeInNs;
     }
 
-    public String getDatetime(){
-        if(startTime == null){
+    public String getDatetime() {
+        if (startTime == null) {
             return "null time";
         }
         return DateFormatUtils.format(startTime, datetimeFormat);

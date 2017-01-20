@@ -1,7 +1,7 @@
 
 {
     "entry": {
-        "jvm": "-Xms1G -Xmx1G",
+        "jvm": "-Xms2G -Xmx2G",
         "environment": {}
     },
     "common": {
@@ -17,7 +17,7 @@
     "core": {
         "dataXServer": {
             "address": "http://localhost:7001/api",
-            "timeout": 10000,
+            "timeout": 20000,
             "reportDataxLog": false,
             "reportPerfLog": false
         },
@@ -25,11 +25,12 @@
             "channel": {
                 "class": "com.alibaba.datax.core.transport.channel.memory.MemoryChannel",
                 "speed": {
-                    "byte": -1,
-                    "record": -1
+                    "byte": 2147483640,
+                    "record":1000000,
+                    "channel":8
                 },
                 "flowControlInterval": 20,
-                "capacity": 512,
+                "capacity": 32,
                 "byteCapacity": 67108864
             },
             "exchanger": {
@@ -42,10 +43,10 @@
                 "reportInterval": 10000
             },
             "taskGroup": {
-                "channel": 5
+                "channel": 8
             },
             "trace": {
-                "enable": "false"
+                "enable": "true"
             }
 
         },

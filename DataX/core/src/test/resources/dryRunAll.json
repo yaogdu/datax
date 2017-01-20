@@ -1,7 +1,7 @@
 
 {
     "entry": {
-        "jvm": "-Xms1G -Xmx1G",
+        "jvm": "-Xms2G -Xmx2G",
         "environment": {
             "PATH": "/home/admin",
             "DATAX_HOME": "/home/admin"
@@ -27,7 +27,7 @@
                 "class": "com.alibaba.datax.core.transport.channel.memory.MemoryChannel",
                 "speed": {
                     "byte": 1048576,
-                    "record": 10000
+                    "record": 100000
                 },
                 "capacity": 32
             },

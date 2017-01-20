@@ -101,7 +101,7 @@ public class JobContainer extends AbstractContainer {
         try {
             this.startTimeStamp = System.currentTimeMillis();
             isDryRun = configuration.getBool(CoreConstant.DATAX_JOB_SETTING_DRYRUN, false);
-            if(isDryRun) {
+            if (isDryRun) {
                 LOG.info("jobContainer starts to do preCheck ...");
                 this.preCheck();
             } else {
@@ -162,7 +162,7 @@ public class JobContainer extends AbstractContainer {
             throw DataXException.asDataXException(
                     FrameworkErrorCode.RUNTIME_ERROR, e);
         } finally {
-            if(!isDryRun) {
+            if (!isDryRun) {
 
                 this.destroy();
                 this.endTimeStamp = System.currentTimeMillis();
@@ -312,7 +312,7 @@ public class JobContainer extends AbstractContainer {
     private void preHandle() {
         String handlerPluginTypeStr = this.configuration.getString(
                 CoreConstant.DATAX_JOB_PREHANDLER_PLUGINTYPE);
-        if(!StringUtils.isNotEmpty(handlerPluginTypeStr)){
+        if (!StringUtils.isNotEmpty(handlerPluginTypeStr)) {
             return;
         }
         PluginType handlerPluginType;
@@ -348,7 +348,7 @@ public class JobContainer extends AbstractContainer {
         String handlerPluginTypeStr = this.configuration.getString(
                 CoreConstant.DATAX_JOB_POSTHANDLER_PLUGINTYPE);
 
-        if(!StringUtils.isNotEmpty(handlerPluginTypeStr)){
+        if (!StringUtils.isNotEmpty(handlerPluginTypeStr)) {
             return;
         }
         PluginType handlerPluginType;
@@ -398,7 +398,7 @@ public class JobContainer extends AbstractContainer {
 
         List<Configuration> transformerList = this.configuration.getListConfiguration(CoreConstant.DATAX_JOB_CONTENT_TRANSFORMER);
 
-        LOG.debug("transformer configuration: "+ JSON.toJSONString(transformerList));
+        LOG.debug("transformer configuration: " + JSON.toJSONString(transformerList));
         /**
          * 输入是reader和writer的parameter list，输出是content下面元素的list
          */
@@ -406,7 +406,7 @@ public class JobContainer extends AbstractContainer {
                 readerTaskConfigs, writerTaskConfigs, transformerList);
 
 
-        LOG.debug("contentConfig configuration: "+ JSON.toJSONString(contentConfig));
+        LOG.debug("contentConfig configuration: " + JSON.toJSONString(contentConfig));
 
         this.configuration.set(CoreConstant.DATAX_JOB_CONTENT, contentConfig);
 
@@ -442,12 +442,15 @@ public class JobContainer extends AbstractContainer {
         boolean isRecordLimit = (this.configuration.getInt(
                 CoreConstant.DATAX_JOB_SETTING_SPEED_RECORD, 0)) > 0;
         if (isRecordLimit) {
+            //1000000
             long globalLimitedRecordSpeed = this.configuration.getInt(
                     CoreConstant.DATAX_JOB_SETTING_SPEED_RECORD, 100000);
 
+            //1000000
             Long channelLimitedRecordSpeed = this.configuration.getLong(
                     CoreConstant.DATAX_CORE_TRANSPORT_CHANNEL_SPEED_RECORD);
             if (channelLimitedRecordSpeed == null || channelLimitedRecordSpeed <= 0) {
+                LOG.warn("在有总tps限速条件下，单个channel的tps值不能为空，也不能为非正数");
                 DataXException.asDataXException(FrameworkErrorCode.CONFIG_ERROR,
                         "在有总tps限速条件下，单个channel的tps值不能为空，也不能为非正数");
             }
@@ -513,7 +516,7 @@ public class JobContainer extends AbstractContainer {
         ExecuteMode executeMode = null;
         AbstractScheduler scheduler;
         try {
-        	executeMode = ExecuteMode.STANDALONE;
+            executeMode = ExecuteMode.STANDALONE;
             scheduler = initStandaloneScheduler(this.configuration);
 
             //设置 executeMode
@@ -797,7 +800,7 @@ public class JobContainer extends AbstractContainer {
             taskConfig.set(CoreConstant.JOB_WRITER_PARAMETER,
                     writerTasksConfigs.get(i));
 
-            if(transformerConfigs!=null && transformerConfigs.size()>0){
+            if (transformerConfigs != null && transformerConfigs.size() > 0) {
                 taskConfig.set(CoreConstant.JOB_TRANSFORMER, transformerConfigs);
             }
 

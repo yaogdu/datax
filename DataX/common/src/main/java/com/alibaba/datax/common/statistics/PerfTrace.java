@@ -136,7 +136,7 @@ public class PerfTrace {
 
                         if (perfReportEnable && needReport(perfRecord)) {
                             synchronized (needReportPool4NotEnd) {
-                                sumPerf4Report.add(curNanoTime,perfRecord);
+                                sumPerf4Report.add(curNanoTime, perfRecord);
                                 needReportPool4NotEnd.remove(perfRecord);
                             }
                         }
@@ -215,7 +215,7 @@ public class PerfTrace {
         //SumPerfRecord4Print countSumPerf = Optional.fromNullable(perfRecordMaps4print.get(PHASE.READ_TASK_DATA)).or(new SumPerfRecord4Print());
 
         SumPerfRecord4Print countSumPerf = perfRecordMaps4print.get(PHASE.READ_TASK_DATA);
-        if(countSumPerf == null){
+        if (countSumPerf == null) {
             countSumPerf = new SumPerfRecord4Print();
         }
 
@@ -446,7 +446,7 @@ public class PerfTrace {
         long sqlQueryTimeInMs = 0L;
         long resultNextTimeInMs = 0L;
 
-        public void add(long curNanoTime,PerfRecord perfRecord) {
+        public void add(long curNanoTime, PerfRecord perfRecord) {
             try {
                 long runTimeEndInMs;
                 if (perfRecord.getElapsedTimeInNs() == -1) {
@@ -468,7 +468,7 @@ public class PerfTrace {
                         odpsCloseTimeInMs += runTimeEndInMs;
                         break;
                 }
-            }catch (Exception e){
+            } catch (Exception e) {
                 //do nothing
             }
         }
@@ -595,6 +595,7 @@ public class PerfTrace {
             return totalCount;
         }
     }
+
     class JobStatisticsDto2 {
 
         private Long id;
